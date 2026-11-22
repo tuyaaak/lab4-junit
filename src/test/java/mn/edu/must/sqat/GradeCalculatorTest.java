@@ -112,4 +112,46 @@ class GradeCalculatorTest {
         assertThrows(IllegalArgumentException.class,
                 () -> calc.totalScore(10, 41, 10, 10, 30));
     }
+
+    @ParameterizedTest
+    @DisplayName("Дүнгийн хязгаарын утгууд")
+    @CsvSource({
+        "90, A",
+        "89.99, B",
+        "80, B",
+        "79.99, C",
+        "70, C",
+        "69.99, D",
+        "60, D",
+        "59.99, F",
+        "0, F",
+        "100, A"
+    })
+    void letterGradeBoundaries(double score, String expected) {
+        GradeCalculator calc = new GradeCalculator();
+
+        String result = calc.letterGrade(score);
+
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Нийлбэр оноог өөр утгуудаар шалгах")
+    @CsvSource({
+        "10, 40, 10, 10, 30, 100",
+        "8, 30, 7, 8, 25, 78",
+        "0, 0, 0, 0, 0, 0",
+        "5, 20, 5, 5, 15, 50"
+    })
+    void totalScoreValues(double att, double lab,
+                          double quiz1, double quiz2,
+                          double exam, double expected) {
+
+        GradeCalculator calc = new GradeCalculator();
+
+        double result = calc.totalScore(
+                att, lab, quiz1, quiz2, exam);
+
+        assertEquals(expected, result, 0.001);
+    }
 }
